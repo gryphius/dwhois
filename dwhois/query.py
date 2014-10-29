@@ -16,6 +16,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import requests
+requests.packages.urllib3.disable_warnings()
 import sys
 import urllib
 import urlparse
