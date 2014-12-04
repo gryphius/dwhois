@@ -91,9 +91,9 @@ class Worker:
                 for domain in r.text.split():
                     yield domain
             except (requests.exceptions.HTTPError,
-                    requests.exceptions.ConnectionError), e:
+                    requests.exceptions.ConnectionError) as e:
                 # TODO needs to be better
-                print e.message
+                print str(e)
 
                 time.sleep(error_sleep)
                 error_sleep = min(error_sleep*2, self.sleep_max)
@@ -121,8 +121,8 @@ class Worker:
                 verify=False)
             r.raise_for_status()
         except (requests.exceptions.HTTPError,
-                requests.exceptions.ConnectionError), e:
+                requests.exceptions.ConnectionError) as e:
             if r:
-                raise WorkerError, '%s: %s' % (e.message, r.text.strip()[:80]), sys.exc_traceback
+                raise WorkerError, '%s: %s' % (str(e), r.text.strip()[:80]), sys.exc_traceback
             else:
-                raise WorkerError, e.message, sys.exc_traceback
+                raise WorkerError, str(e), sys.exc_traceback

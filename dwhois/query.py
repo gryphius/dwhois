@@ -72,8 +72,8 @@ class DWhois:
 
             return r.json()
         except (requests.exceptions.HTTPError,
-                requests.exceptions.ConnectionError), e:
-            raise QueryError, e.message, sys.exc_traceback
+                requests.exceptions.ConnectionError) as e:
+            raise QueryError, str(e), sys.exc_traceback
 
     def check(self, domain):
         """
@@ -105,8 +105,8 @@ class DWhois:
 
             raise QueryError, 'Unexpected HTTP status code: %d'% r.status_code
         except (requests.exceptions.HTTPError,
-                requests.exceptions.ConnectionError), e:
-            raise QueryError, e.message, sys.exc_traceback
+                requests.exceptions.ConnectionError) as e:
+            raise QueryError, str(e), sys.exc_traceback
 
     def submit(self, domains, queue=None):
         """
@@ -132,8 +132,8 @@ class DWhois:
                     verify=False)
             r.raise_for_status()
         except (requests.exceptions.HTTPError,
-                requests.exceptions.ConnectionError), e:
-            raise QueryError, e.message, sys.exc_traceback
+                requests.exceptions.ConnectionError) as e:
+            raise QueryError, str(e), sys.exc_traceback
 
     def get_user(self, user):
         """
@@ -159,6 +159,6 @@ class DWhois:
 
             return r.json()
         except (requests.exceptions.HTTPError,
-                requests.exceptions.ConnectionError), e:
-            raise QueryError, e.message, sys.exc_traceback
+                requests.exceptions.ConnectionError) as e:
+            raise QueryError, str(e), sys.exc_traceback
 

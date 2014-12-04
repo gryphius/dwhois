@@ -76,15 +76,15 @@ def action(domains, json_out=False, check=False, submit=False, offline=False):
                     print json.dumps(data)
                 else:
                     format(data, sys.stdout)
-            except QueryError, e:
+            except QueryError as e:
                 if json_out:
                     print json.dumps({
                             'domain_name' : domain,
-                            'error' : e.message
+                            'error' : str(e)
                             })
                 else:
                     print 'Domain: %s' % domain
-                    print 'ERROR: %s' % e.message
+                    print 'ERROR: %s' % str(e)
     else:
         if check and submit:
             for domain in domains:
