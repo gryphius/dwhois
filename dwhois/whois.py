@@ -16,7 +16,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import subprocess
-import tempfile
 import re
 
 from dwhois.config import whois_path, whois_strict
@@ -60,14 +59,10 @@ def whois(domain):
     domain=domain.strip()
     if not is_valid_object(domain):
         raise WhoisError, "invalid domain name: %s"%domain
-
-    buf = tempfile.TemporaryFile()
-    errbuf = tempfile.TemporaryFile()
-
-    try:
-        subprocess.check_call([whois_path, '--', domain], stdout=buf, stderr=errbuf)
-        buf.seek(0)
-        return buf.read()
-    except subprocess.CalledProcessError:
-        errbuf.seek(0)
-        raise WhoisError, "whois failed: '%s'" % errbuf.read().rstrip()
+    
+    process = subprocess.Popen([whois_path, '--', domain], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, errout = process.communicate()
+    
+    if process.returncode != 0:
+        raise WhoisError, "whois failed: '%s'" % errout.rstrip()
+    return output
