@@ -58,4 +58,8 @@ optional arguments:
 Worker Process
 --------------
 
-Run `dwhois-worker` in screen or with runit.  Init scripts to come in a later release.
+Run `dwhois-worker` in screen or with runit.
+
+Or set pidfile in /etc/dwhois.conf to a sensible value and run `dwhois-worker -d`
+
+Or use the init script suitable to your distribution from the scripts directory.
