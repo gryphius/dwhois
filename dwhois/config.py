@@ -54,6 +54,11 @@ automatically appended.
 if api_base_url and api_base_url[-1] != '/':
     api_base_url += '/'
 
+pidfile = config.get('dwhois','pidfile')
+"""
+@var pidfile: location of the dwhois-worker pidfile (when using --daemon)
+@type pidfile: string
+"""
 use_cache = config.getboolean('cache', 'use_cache')
 """
 @var use_cache: Whether or not to use the MongoDB-backed cache.
