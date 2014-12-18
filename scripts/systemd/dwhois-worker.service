@@ -1,0 +1,12 @@
+[Unit]
+Description=dwhois-worker
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/dwhois-worker
+ExecStop=/bin/kill ${MAINPID}
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

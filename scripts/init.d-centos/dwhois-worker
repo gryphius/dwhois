@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Startup script for fuglu
+#
+# chkconfig: 2345 65 38
+# description: dwhois worker daemon
+# processname: dwhois-worker
+# pidfile: /var/run/dwhois-worker.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# See how we were called.
+case "$1" in
+  start)
+        echo -n "Starting dwhois-worker: "
+        daemon /usr/bin/dwhois-worker -d
+        RETVAL=$?
+        echo
+        ;;
+  stop)
+        echo -n "Stopping dwhois-worker: "
+        killproc dwhois-worker
+        RETVAL=$?
+        echo
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        RETVAL=$?
+        ;;
+  		
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $RETVAL
