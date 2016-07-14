@@ -33,8 +33,8 @@ class Worker:
     """
     Manages communications with the remote server.
     """
-    def __init__(self, base_url=api_base_url, user=None, password=None,
-            sleep_min=1, sleep_max=60):
+    def __init__(self, api_base_url=api_base_url, user=None, password=None,
+            sleep_min=1, sleep_max=60, request_timeout=10):
         """
         @param base_url: base URL for the API
         @type base_url: url, must end with /
@@ -56,6 +56,8 @@ class Worker:
 
         self.sleep_min = sleep_min
         self.sleep_max = sleep_max
+
+        self.request_timeout = request_timeout
 
     def queue(self, queue=None, number=None):
         """
@@ -84,7 +86,8 @@ class Worker:
                 r = requests.get(request_url,
                         auth=(self.user,self.password),
                         stream=False,
-                        verify=False)
+                        verify=False,
+                        timeout=self.request_timeout)
                 r.raise_for_status()
 
                 error_sleep = self.sleep_min
@@ -118,7 +121,8 @@ class Worker:
                 auth=(self.user,self.password),
                 data = text,
                 stream=False,
-                verify=False)
+                verify=False,
+                timeout=self.request_timeout)
             r.raise_for_status()
         except (requests.exceptions.HTTPError,
                 requests.exceptions.ConnectionError) as e:

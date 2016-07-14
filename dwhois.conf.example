@@ -2,6 +2,8 @@
 user=your_username
 password=your_password
 url=https://path/to/api/version/
+pidfile=/var/run/dwhois-worker.pid
+request_timeout=10
 
 [cache]
 use_cache=True

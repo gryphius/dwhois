@@ -54,6 +54,14 @@ automatically appended.
 if api_base_url and api_base_url[-1] != '/':
     api_base_url += '/'
 
+request_timeout = config.getint('dwhois', 'request_timeout')
+if request_timeout is None:
+    request_timeout = 10
+"""
+@var request_timeout: Maximum time spent per http request (get, push, submit, queue)
+@type request_timeout: int
+"""
+
 pidfile = config.get('dwhois','pidfile')
 """
 @var pidfile: location of the dwhois-worker pidfile (when using --daemon)

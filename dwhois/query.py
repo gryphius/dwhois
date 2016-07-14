@@ -32,7 +32,7 @@ class DWhois:
     """
     Manages communications with the remote server.
     """
-    def __init__(self, base_url=api_base_url, user=None, password=None):
+    def __init__(self, base_url=api_base_url, user=None, password=None, request_timeout=10):
         """
         @param base_url: base URL for the API
         @type base_url: url, must end with /
@@ -47,6 +47,7 @@ class DWhois:
 
         self.user = user
         self.password = password
+        self.request_timeout = request_timeout
 
     def get(self, domain):
         """
@@ -67,7 +68,8 @@ class DWhois:
                     auth=(self.user,self.password),
                     headers={ 'Accept' : '/application/json' },
                     stream=False,
-                    verify=False)
+                    verify=False,
+                    timeout=self.request_timeout)
             r.raise_for_status()
 
             return r.json()
@@ -94,7 +96,8 @@ class DWhois:
                     auth=(self.user,self.password),
                     headers={ 'Accept' : '/application/json' },
                     stream=False,
-                    verify=False)
+                    verify=False,
+                    timeout=self.request_timeout)
 
             if r.status_code == 200:
                 return True
@@ -129,7 +132,8 @@ class DWhois:
                     auth=(self.user,self.password),
                     headers={ 'Accept' : '/application/json' },
                     stream=False,
-                    verify=False)
+                    verify=False,
+                    timeout=self.request_timeout)
             r.raise_for_status()
         except (requests.exceptions.HTTPError,
                 requests.exceptions.ConnectionError) as e:
@@ -154,7 +158,8 @@ class DWhois:
                     auth=(self.user,self.password),
                     headers={ 'Accept' : '/application/json' },
                     stream=False,
-                    verify=False)
+                    verify=False,
+                    timeout=self.request_timeout)
             r.raise_for_status()
 
             return r.json()
