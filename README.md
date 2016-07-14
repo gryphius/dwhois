@@ -15,6 +15,7 @@ user=your username
 password=your password
 average_time=time per domain in seconds
 url=https://path/to/api/version/
+request_timeout=10
 
 [cache]
 use_cache=True
