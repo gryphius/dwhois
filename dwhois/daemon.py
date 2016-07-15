@@ -18,6 +18,7 @@ import os
 import pwd
 import grp
 import atexit
+import resource
 
 class DaemonStuff(object):
     """Makes a daemon out of a python program"""
@@ -29,7 +30,7 @@ class DaemonStuff(object):
         """Delete the pid file"""
         try:
             os.remove(self.pidfile)
-        except:
+        except Exception:
             pass
 
     def createDaemon(self):
@@ -43,14 +44,14 @@ class DaemonStuff(object):
         except OSError, e:
             raise Exception, "%s [%d]" % (e.strerror, e.errno)
 
-        if (pid == 0):
+        if pid == 0:
             os.setsid()
             try:
                 pid = os.fork()    # Fork a second child.
             except OSError, e:
                 raise Exception, "%s [%d]" % (e.strerror, e.errno)
 
-            if (pid == 0):    # The second child.
+            if pid == 0:    # The second child.
                 os.chdir('/')
                 os.umask(0)
             else:
@@ -59,9 +60,8 @@ class DaemonStuff(object):
         else:
             os._exit(0)    # Exit parent of the first child.
 
-        import resource        # Resource usage information.
-        maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
-        if (maxfd == resource.RLIM_INFINITY):
+        maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1] # Resource usage information.
+        if maxfd == resource.RLIM_INFINITY:
             maxfd = 1024
 
         # Iterate through and close all file descriptors.
@@ -81,22 +81,39 @@ class DaemonStuff(object):
         atexit.register(self.delpid)
         pid = str(os.getpid())
         file(self.pidfile,'w+').write("%s\n" % pid)
-        return(0)
+        return 0
+
+
+
+    def check_privs(self, username='nobody', groupname='nobody'):
+        errors = []
+        running_uid = running_gid = None
+        try:
+            running_uid = pwd.getpwnam(username).pw_uid
+        except Exception:
+            errors.extend('No such user: %s' % username)
+        try:
+            running_gid = grp.getgrnam(groupname).gr_gid
+        except Exception:
+            errors.extend('No such group: %s' % groupname)
+
+        return running_uid, running_gid, errors
+
+
 
     def drop_privs(self,username='nobody',groupname='nobody'):
         #starting_uid = os.getuid()
         #starting_gid = os.getgid()
         #starting_uid_name = pwd.getpwuid(starting_uid).pw_name
         #starting_gid_name = grp.getgrgid(starting_gid).gr_name
-        
+
         try:
             running_uid = pwd.getpwnam(username).pw_uid
             running_gid = grp.getgrnam(groupname).gr_gid
-        except:
+        except Exception:
             raise Exception('Can not drop privileges, user %s or group %s does not exist'%(username,groupname))
         new_umask=077
         os.umask(new_umask)
 
         os.setgid(running_gid)
         os.setuid(running_uid)
-        
