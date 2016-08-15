@@ -17,15 +17,11 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import argparse
-import sys
+import configargparse
+from dwhois.query import DWhois
+from dwhois.config import user,password,api_base_url
 
-from dwhois.whois import whois, WhoisError
-from dwhois.timing import PoissonRateLimiter
-from dwhois.query import DWhois, QueryError
-from dwhois.config import user,password,average_time,api_base_url
-
-parser = argparse.ArgumentParser()
+parser = configargparse.ArgumentParser()
 parser.add_argument('user', nargs='?', help='user to query', default=user)
 args = parser.parse_args()
 
