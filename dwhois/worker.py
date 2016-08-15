@@ -94,7 +94,8 @@ class Worker:
                 for domain in r.text.split():
                     yield domain
             except (requests.exceptions.HTTPError,
-                    requests.exceptions.ConnectionError) as e:
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.ReadTimeout) as e:
                 # TODO needs to be better
                 print str(e)
 
@@ -125,7 +126,8 @@ class Worker:
                 timeout=self.request_timeout)
             r.raise_for_status()
         except (requests.exceptions.HTTPError,
-                requests.exceptions.ConnectionError) as e:
+                requests.exceptions.ConnectionError,
+                requests.exceptions.ReadTimeout) as e:
             if r:
                 raise WorkerError, '%s: %s' % (str(e), r.text.strip()[:80]), sys.exc_traceback
             else:
